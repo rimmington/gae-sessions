@@ -174,8 +174,11 @@ class Session(object):
         """Returns a new session ID."""
         # make a random ID (random.randrange() is 10x faster but less secure?)
         if expire_ts is None:
-            expire_dt = datetime.datetime.now() + self.lifetime
-            expire_ts = int(time.mktime((expire_dt).timetuple()))
+            if self.lifetime:
+                expire_dt = datetime.datetime.now() + self.lifetime
+                expire_ts = int(time.mktime((expire_dt).timetuple()))
+            else:
+                expire_ts = 0
         else:
             expire_ts = int(expire_ts)
         if ssl_only:
